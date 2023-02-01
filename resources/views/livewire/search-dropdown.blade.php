@@ -22,11 +22,7 @@
                         @foreach($results as $result)
                             <li class="border-b border-gray-700">
                                 <a href="{{$result['linkToPage']}}" class="block hover:bg-gray-700 px-3 py-3 flex items-center transition ease-in-out duration-150" @if ($loop->last)@keydown.tab="isOpen = event.shiftKey ? true : false" @endif>
-                                    @if ($result['poster_path'])
-                                        <img src="{{ $result['poster_path'] }}" alt="poster" class="w-8">
-                                    @else
-                                        <img src="/img/50x75.png" alt="poster" class="w-8">
-                                    @endif
+                                    <img src="{{ $result['poster_path'] }}" alt="poster" class="w-8">
                                     <span class="ml-4">{{ $result['title'] }}</span>
                                 </a>
                             </li> 
