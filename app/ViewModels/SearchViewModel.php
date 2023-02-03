@@ -23,10 +23,10 @@ class SearchViewModel extends ViewModel
                     $title = 'Untitled';
                 }
             return collect($result)->merge([
-                'poster_path'=>$result['poster_path'] ? 'https://image.tmdb.org/t/p/w92/'.$result['poster_path'] : '/img/50x75.png',
+                'poster_path'=>$result['media_type'] === 'person' ? 'https://image.tmdb.org/t/p/w92/'.$result['profile_path'] : ($result['poster_path'] ? 'https://image.tmdb.org/t/p/w92/'.$result['poster_path'] : '/img/50x75.png'),
                 'title'=>$title,
-                'linkToPage' => $result['media_type'] === 'movie' ? route('movies.show', $result['id']) : route('tv.show', $result['id']),
-            ])->only('id','title','name','poster_path','linkToPage');
+                'linkToPage' => $result['media_type'] === 'movie' ? route('movies.show', $result['id']) : ($result['media_type'] === 'person' ? route('actors.show',$result['id']): route('tv.show', $result['id']) ),
+            ])->only('id','title','name','poster_path','linkToPage','profile_path');
         });
     }
 }

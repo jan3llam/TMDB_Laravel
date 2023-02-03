@@ -14,4 +14,14 @@ Route::get('/actors/{actor}','ActorsController@show')->name('actors.show');
 Route::get('/tv','TvController@index')->name('tv.index');
 Route::get('/tv/{show}','TvController@show')->name('tv.show');
 
+Route::group(['middleware'=>'guest:user'],function(){
+	Route::get('/login','UsersController@index');
+	Route::get('/signup','UsersController@create');
+});
+
+
+Route::post('/login','UsersController@login')->name('users.login');
+Route::post('/signup','UsersController@register')->name('users.signup');
+Route::get('/logout','UsersController@logout');
+
 

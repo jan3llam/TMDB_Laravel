@@ -19,7 +19,6 @@ class SearchDropdown extends Component
 
         }
 
-
         $viewModel=new SearchViewModel($results);
 
         return view('livewire.search-dropdown',$viewModel);
