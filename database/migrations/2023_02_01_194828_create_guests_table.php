@@ -21,6 +21,8 @@ class CreateGuestsTable extends Migration
             $table->string('email',100)->unique();
             $table->string('password',60);
             $table->string('avatar',100)->nullable();
+            $table->string('session',100)->nullable();
+            $table->timestamp('session_expiry')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->timestamps();
         });

@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Http;
+use \Carbon\Carbon;
 
 class UsersController extends Controller
 {
@@ -30,18 +32,36 @@ class UsersController extends Controller
 
         $guest = Guests::where('email', $email)->orWhere('username', $email)->first();
         if ($guest==null){
-            return ResponseController::error(-2,"User doesn't exists");
+            return redirect(route('users.login'))->with('failure','User doesn\'t exist.');
         }
 
         if (Hash::check($password,$guest->password)) {
             if (Auth::guard('user')->attempt(['id'=>$guest->id,"password"=>$password])){
-                return redirect(route('movies.index'));
+                $user=Auth::guard('user')->user();
+                if(isset($user->session)){
+                    if($user->session_expiry <= Carbon::now()){
+                        dd("hello");
+                        $this->assignSession($guest);
+                    }
+                }
+                else{
+                    $this->assignSession($guest);
+                } 
+                return redirect(route('movies.index'))->with('success','You are logged in sucessfully.');
             }
         }
         else {
-            return ResponseController::error(-2,"user and password doesn't match");
+            return redirect(route('users.login'))->with('failure','User and Password doesn\'t match.');
         }
 
+    }
+
+
+    public function assignSession($guest){
+        $session=Http::get('https://api.themoviedb.org/3/authentication/guest_session/new'.'?api_key='.config('services.tmdb.api'))->json();
+        $guest->session=$session['guest_session_id'];
+        $guest->session_expiry=Carbon::parse($session['expires_at']);
+        $guest->save();
     }
 
     /**
@@ -81,8 +101,9 @@ class UsersController extends Controller
         ]);
 
         if ($validator->fails()){
-            return ResponseController::error(-1,$validator->errors()->first());
+            return redirect()->back()->with('warning',$validator->errors()->first());
         }
+
 
 
         $user = new Guests;
@@ -107,17 +128,6 @@ class UsersController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();     
         return view('users.login');
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
     }
 
     /**
@@ -151,6 +161,9 @@ class UsersController extends Controller
      */
     public function destroy($id)
     {
-        //
+        // $response = Http::withHeaders(['Content-Type' => 'application/json'])
+        //     ->send('POST', 'https://example.com', [
+        //         'body' => '{ test: 1 }'
+        //     ])->json();
     }
 }

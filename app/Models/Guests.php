@@ -22,7 +22,9 @@ class Guests extends Model implements AuthenticatableContract, AuthorizableContr
         'username',
         'email',
         'password',
-        'avatar'
+        'avatar',
+        'session',
+        'session_expiry'
     ];
 
     protected $hidden=[
@@ -32,5 +34,6 @@ class Guests extends Model implements AuthenticatableContract, AuthorizableContr
 
     protected $casts=[
         'email_verified_at' => 'datetime',
+        'session_expiry' => 'datetime',
     ];
 }
