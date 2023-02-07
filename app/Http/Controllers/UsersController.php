@@ -5,12 +5,16 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Guests;
+use App\Models\UserVerify;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Http\Client\ConnectionException;
 use \Carbon\Carbon;
+use Mail;
+use Auth;
+use Str;
 
 class UsersController extends Controller
 {
@@ -40,7 +44,6 @@ class UsersController extends Controller
                 $user=Auth::guard('user')->user();
                 if(isset($user->session)){
                     if($user->session_expiry <= Carbon::now()){
-                        dd("hello");
                         $this->assignSession($guest);
                     }
                 }
@@ -104,22 +107,70 @@ class UsersController extends Controller
             return redirect()->back()->with('warning',$validator->errors()->first());
         }
 
+        
 
-
-        $user = new Guests;
-        $user->firstname = $firstname;
-        $user->lastname = $lastname;
-        $user->username = $username;
-        $user->email = $email;
-        $user->password = $password;
+        $user = Guests::create([
+                    'firstname'=>$firstname,
+                    'lastname'=>$lastname,
+                    'username'=>$username,
+                    'email'=>$email,
+                    'password'=>$password
+                ]);
         if(isset($avatar)){
             $path = Storage::disk('public')->put('avatars', $avatar);
             $user->avatar='storage/'.$path;
         }
+
         $user->save();
+
+        $token = Str::random(64);
+
+        UserVerify::create([
+              'token' => $token, 
+              'guest_id' => $user->id
+            ]);
+
+        Mail::send('emails.verificationEmail', ['token' => $token], function($message) use($user){
+              $message->to($user->email);
+              $message->from('MandS.supp@gmail.com', 'Movies&Shows');
+              $message->subject('Email Verification Mail');
+          });
+
 
         return view('users.login');
 
+    }
+
+
+    public function verifyAccount($token)
+    {
+        $verifyUser = UserVerify::where('token', $token)->first();
+  
+        $message = 'Sorry your email cannot be identified.';
+  
+        if(isset($verifyUser) ){
+            $guest = $verifyUser->guest;
+              
+            if(!$guest->verified) {
+                $verifyUser->guest->verified = 1;
+                $verifyUser->guest->email_verified_at = Carbon::now();
+                $verifyUser->guest->save();
+                $message = "Your e-mail is verified, You can now enjoy your ratings.";
+            } else {
+                $message = "Your e-mail is already verified, You can now enjoy your ratings.";
+            }
+        }
+  
+      return redirect(route('users.login'))->with('success',$message);
+    }
+
+
+    public function submitRating(Request $request)
+    {
+     // $response = Http::withHeaders(['Content-Type' => 'application/json'])
+     //    ->send('POST', 'https://example.com', [
+     //        'body' => '{ test: 1 }'
+     //    ])->json();   
     }
 
     public function logout(Request $request)

@@ -24,7 +24,9 @@ class Guests extends Model implements AuthenticatableContract, AuthorizableContr
         'password',
         'avatar',
         'session',
-        'session_expiry'
+        'session_expiry',
+        'verified',
+        'email_verified_at'
     ];
 
     protected $hidden=[
@@ -35,5 +37,7 @@ class Guests extends Model implements AuthenticatableContract, AuthorizableContr
     protected $casts=[
         'email_verified_at' => 'datetime',
         'session_expiry' => 'datetime',
+        'verified'=>'boolean',
     ];
+
 }

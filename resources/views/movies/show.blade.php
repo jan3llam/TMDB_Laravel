@@ -1,5 +1,13 @@
 @extends('layouts.main')
 
+@section('style')
+
+   li:hover ~ li {
+        color: #f97316;
+    }
+
+@endsection
+
 @section('content')
 
 <div class="movie-info border-b border-gray-800">
@@ -33,7 +41,7 @@
                     @endforeach
                 </div>
             </div>
-            <div x-data="{isOpen:false}">
+            <div x-data="{isOpen:false,isRate:false}">
                 @if(count($movie['videos']['results']) > 0)
                     @foreach($movie['videos']['results'] as $video)
                         @if($video['type']=='Trailer')
@@ -45,6 +53,14 @@
                                     <svg class="w-6 fill-current" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M10 16.5l6-4.5-6-4.5v9zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>
                                     <span class="ml-2">Play Trailer</span>
                                 </button>
+                                @if(Auth::guard('user')->check())
+                                    <button @click="isRate=true"
+                                    class="flex inline-flex items-center ml-2 bg-orange-500 text-gray-900 rounded font-semibold px-5 py-4 hover:bg-orange-600 transition ease-in-out duration-150"
+                                    >
+                                        <svg class="w-6 fill-current" viewBox="0 0 24 24"><g data-name="Layer 2"><path d="M17.56 21a1 1 0 01-.46-.11L12 18.22l-5.1 2.67a1 1 0 01-1.45-1.06l1-5.63-4.12-4a1 1 0 01-.25-1 1 1 0 01.81-.68l5.7-.83 2.51-5.13a1 1 0 011.8 0l2.54 5.12 5.7.83a1 1 0 01.81.68 1 1 0 01-.25 1l-4.12 4 1 5.63a1 1 0 01-.4 1 1 1 0 01-.62.18z" data-name="star"/></g></svg>
+                                        <span class="ml-2">Rate Now!</span>
+                                    </button>
+                                @endif
                             </div>
                         @break
                         @endif
@@ -74,6 +90,47 @@
                         </div>
                     </div>
                 </div>
+                <form method="POST" action="{{route('users.rate',$movie['id'])}}">
+                    @csrf
+                    <div
+                        style="background-color: rgba(0, 0, 0, .5);"
+                        class="fixed top-1/2 bottom-1/2 flex items-center shadow-lg"
+                        x-show.transition.opacity="isRate"
+                    >
+                        <div class="container mx-auto lg:px-32 rounded-lg">
+                            <div class="bg-gray-800 rounded">
+                                <div class="flex justify-end pr-2">
+                                    <button
+                                        @click="resetStars
+                                                isRate=false"
+                                        @keydown.escape.window="isRate = false"
+                                        class="text-2xl leading-none hover:text-gray-300">&times;
+                                    </button>
+                                </div>
+                                <div class="px-8 py-8">
+                                    <div class="flex justify-center mb-3">
+                                        <i class="fa fa-frown-o text-lg mr-1" aria-hidden="true"></i><span class="text-xl">Submit your rating here!</span><i class="fa fa-smile-o text-lg ml-1" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="responsive-container overflow-hidden relative ">
+                                        <input x-ref="rate" type="hidden" id="rate" name="rate" value="0">
+                                        <ul class="flex flex-row-reverse justify-center">
+                                            @for ($i = 10; $i >0; $i--)     
+                                                <li x-ref="r{{$i}}"
+                                                    @click="starsRating
+                                                            $refs.rate.setAttribute('value',$refs.r{{$i}}.getAttribute('title'))" class="stars text-2xl text-black mr-1 hover:text-orange-500" title="{{$i}}">
+                                                    <i class="fa fa-star"></i>
+                                                </li>
+                                            @endfor
+                                        </ul>
+                                    </div>
+                                    <div class="flex justify-center mt-4">
+                                        <button type="submit" class="flex items-center px-4 py-2   bg-orange-500 text-white rounded font-semibold hover:bg-orange-600 ">Submit</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -139,5 +196,34 @@
 </div>
 
 
+@endsection
+
+@section('scripts')
+    <script type="text/javascript">
+
+        const stars = document.getElementsByClassName('stars');
+
+        function starsRating(){
+            const rate = parseInt(document.getElementById('rate').getAttribute('value'));
+
+            for (let i = 0; i < stars.length; i++) {
+                  if(parseInt(stars[i].getAttribute('title'))<=rate){
+                    stars[i].setAttribute('style','color:#f97316;');
+                  }
+                  else{
+                    stars[i].setAttribute('style','{color:black;} :hover ~ li{color:#f97316;}');
+                  }
+                }
+        }
+
+        function resetStars(){
+            for (let i = 0; i < stars.length; i++) {
+                stars[i].setAttribute('style','{color:black;} :hover ~ li{color:#f97316;}');
+            }
+        }
+
+            
+
+    </script>
 
 @endsection

@@ -23,6 +23,7 @@ class CreateGuestsTable extends Migration
             $table->string('avatar',100)->nullable();
             $table->string('session',100)->nullable();
             $table->timestamp('session_expiry')->nullable();
+            $table->boolean('verified')->default(0);
             $table->timestamp('email_verified_at')->nullable();
             $table->timestamps();
         });
