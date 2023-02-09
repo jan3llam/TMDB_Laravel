@@ -13,7 +13,8 @@ class UserVerify extends Model
     protected $table="user_verifies";
 
     protected $fillable=[
-        'token',
+        'emailtoken',
+        'passtoken',
         'guest_id'
     ];
 

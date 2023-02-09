@@ -45,7 +45,7 @@
 
             <div class="flex items-center mb-6 -mt-4">
               <div class="flex ml-auto">
-                <a href="#" class="inline-flex text-xs sm:text-sm text-white hover:text-orange-500">Forgot Your Password?</a>
+                <a href="{{url('/user/forget-password')}}" class="inline-flex text-xs sm:text-sm text-white hover:text-orange-500">Forgot Your Password?</a>
               </div>
             </div>
             <div class="flex w-full">

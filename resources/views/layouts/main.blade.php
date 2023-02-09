@@ -15,13 +15,13 @@
   </head>
   <body class="font-sans bg-gray-900 text-white">
     <nav class="border-b border-gray-800">
-      <div class="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between px-4 py-6">
+      <div x-data="{isMenu:false}"  class="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between px-4 py-6">
         <ul class="flex flex-col md:flex-row items-center">
           <li>
             <a href="{{route('movies.index')}}">
                   <svg class="w-32" viewBox="0 0 74 24" fill="none"><path d="M18 4l2 4h-3l-2-4h-2l2 4h-3l-2-4H8l2 4H7L5 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4h-4zM35.568 7.047l2.557 7.219" fill="#fff"/>
                   </svg>
-              </a>
+            </a>
           </li>
           <li class="md:ml-16 mt-3 md:mt-0">
               <a href="{{route('movies.index')}}" class="hover:text-gray-300">Movies</a>
@@ -35,31 +35,37 @@
         </ul>
         <div class="flex flex-col md:flex-row items-center">
             @if(Auth::guard('user')->check())
-              <div class="md:mr-8 mt-3 md:mt-0">
-                  <a href="{{url('/logout')}}" class="hover:text-gray-300">Logout</a>
-              </div>
-            @else
-              <div class="md:mr-8 mt-3 md:mt-0">
-                  <a href="{{url('/login')}}" class="hover:text-gray-300">Sign in</a>
-              </div>
-            @endif
-            <livewire:search-dropdown>
-            @if(Auth::guard('user')->check())
               @if(isset(Auth::guard('user')->user()->avatar))
-                <div class="md:ml-4 mt-3 md:mt-0">
+                <div class="md:mr-4 mt-3 md:mt-0">
                       <a href="#">
                         <img src="{{Auth::guard('user')->user()->avatar}}" alt="avatar" class="rounded-full w-8 h-8">
                       </a>
                 </div>
               @else
-                <div class="md:ml-4 mt-3 md:mt-0">
+                <div class="md:mr-4 mt-3 md:mt-0">
                       <a href="#">
                         <img src="{{url('img/noprofile.png')}}" alt="avatar" class="rounded-full w-8 h-8">
                       </a>
                 </div>
               @endif
             @endif
+            <livewire:search-dropdown>
+            @if(Auth::guard('user')->check())
+              <div class="md:ml-6 mt-3 md:mt-1">
+                  <button @click="isMenu=true" data-drawer-target="logo-sidebar" data-drawer-toggle="logo-sidebar" aria-controls="logo-sidebar" type="button" class="inline-flex items-center text-sm text-white rounded-lg hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-100">
+                    <span class="sr-only">Open sidebar</span>
+                    <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                       <path clip-rule="evenodd" fill-rule="evenodd" d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z"></path>
+                    </svg>
+                </button>
+              </div>
+            @else
+              <div class="md:ml-6 mt-3 md:mt-0">
+                  <a href="{{url('/login')}}" class="hover:text-gray-300">Sign in</a>
+              </div>
+            @endif
         </div>
+        @include('layouts.menu')
       </div>
     </nav>
     <div x-data="{isOpen:true}" x-show="isOpen" class="flex flex-col md:flex-row justify-center">

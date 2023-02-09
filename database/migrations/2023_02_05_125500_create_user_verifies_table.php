@@ -15,7 +15,8 @@ class CreateUserVerifiesTable extends Migration
     {
         Schema::create('user_verifies', function (Blueprint $table) {
             $table->id();
-            $table->string('token',150);
+            $table->string('emailtoken',150)->nullable();
+            $table->string('passtoken',150)->nullable();
             $table->unsignedInteger('guest_id');
             $table->foreign('guest_id')->references('id')->on('guests');
             $table->timestamps();

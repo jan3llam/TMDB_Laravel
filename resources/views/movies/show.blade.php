@@ -2,7 +2,7 @@
 
 @section('style')
 
-   li:hover ~ li {
+   li.stars:hover ~ li.stars {
         color: #f97316;
     }
 
@@ -95,7 +95,7 @@
                     <div
                         style="background-color: rgba(0, 0, 0, .5);"
                         class="fixed top-1/2 bottom-1/2 flex items-center shadow-lg"
-                        x-show.transition.opacity="isRate"
+                        x-show="isRate" x-transition.opacity
                     >
                         <div class="container mx-auto lg:px-32 rounded-lg">
                             <div class="bg-gray-800 rounded">
@@ -104,7 +104,8 @@
                                         @click="resetStars
                                                 isRate=false"
                                         @keydown.escape.window="isRate = false"
-                                        class="text-2xl leading-none hover:text-gray-300">&times;
+                                        class="text-2xl leading-none hover:text-gray-300"
+                                        type="button">&times;
                                     </button>
                                 </div>
                                 <div class="px-8 py-8">
@@ -124,7 +125,7 @@
                                         </ul>
                                     </div>
                                     <div class="flex justify-center mt-4">
-                                        <button type="submit" class="flex items-center px-4 py-2   bg-orange-500 text-white rounded font-semibold hover:bg-orange-600 ">Submit</button>
+                                        <button type="submit" class="flex items-center px-4 py-2   bg-orange-500 text-white rounded font-semibold hover:bg-orange-600" name="rmovie" value="rmovie">Submit</button>
                                     </div>
                                 </div>
                             </div>
@@ -176,7 +177,7 @@
         <div
             style="background-color: rgba(0, 0, 0, .5);"
             class="fixed top-0 left-0 w-full h-full flex items-center shadow-lg overflow-y-auto"
-            x-show.transition.opacity="isOpen">
+            x-show="isOpen" x-transition.opacity>
             <div class="container mx-auto lg:px-32 rounded-lg overflow-y-auto">
                 <div class="bg-gray-900 rounded">
                     <div class="flex justify-end pr-4 pt-2">
@@ -220,9 +221,7 @@
             for (let i = 0; i < stars.length; i++) {
                 stars[i].setAttribute('style','{color:black;} :hover ~ li{color:#f97316;}');
             }
-        }
-
-            
+        }      
 
     </script>
 

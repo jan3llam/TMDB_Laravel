@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use App\ViewModels\MoviesViewModel;
 use App\ViewModels\ShowMovieViewModel;
+use Illuminate\Http\Client\ConnectionException;
 
 
 class MoviesController extends Controller
@@ -17,19 +18,24 @@ class MoviesController extends Controller
      */
     public function index()
     {
+        try{
+            $popular = Http::get('https://api.themoviedb.org/3/movie/popular'.'?api_key='.config('services.tmdb.api'))->json()['results'];
 
-        $popular = Http::get('https://api.themoviedb.org/3/movie/popular'.'?api_key='.config('services.tmdb.api'))->json()['results'];
-
-        $nowPlaying = Http::get('https://api.themoviedb.org/3/movie/now_playing'.'?api_key='.config('services.tmdb.api'))->json()['results'];
-
-
-        $genres = Http::get('https://api.themoviedb.org/3/genre/movie/list'.'?api_key='.config('services.tmdb.api'))->json()['genres'];
+            $nowPlaying = Http::get('https://api.themoviedb.org/3/movie/now_playing'.'?api_key='.config('services.tmdb.api'))->json()['results'];
 
 
-        $viewModel = new MoviesViewModel($popular,$nowPlaying,$genres);
+            $genres = Http::get('https://api.themoviedb.org/3/genre/movie/list'.'?api_key='.config('services.tmdb.api'))->json()['genres'];
 
 
-        return view('movies.index',$viewModel);
+            $viewModel = new MoviesViewModel($popular,$nowPlaying,$genres);
+
+
+            return view('movies.index',$viewModel);       
+        }
+        catch(ConnectionException $e){
+
+            return redirect()->back()->with('failure','Connection Problem..');
+        }
     }
 
     /**

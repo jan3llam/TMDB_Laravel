@@ -15,6 +15,11 @@ class CreateRatingsTable extends Migration
     {
         Schema::create('ratings', function (Blueprint $table) {
             $table->id();
+            $table->unsignedInteger('guest_id');
+            $table->foreign('guest_id')->references('id')->on('guests');
+            $table->string('media_type',40);
+            $table->integer('show_id');
+            $table->integer('value');
             $table->timestamps();
         });
     }

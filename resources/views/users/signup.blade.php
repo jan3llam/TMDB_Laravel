@@ -7,7 +7,7 @@
     <div class="min-h-screen flex flex-col items-center justify-center">
       <div class="flex flex-col bg-gray-800 mt-10 shadow-md px-4 sm:px-6 md:px-8 lg:px-10 py-8 rounded-md w-full max-w-md">
           <div class="flex justify-center items-center content-center">
-              <svg class="w-32" viewBox="0 0 24 24" fill="none"><path d="M18 4l2 4h-3l-2-4h-2l2 4h-3l-2-4H8l2 4H7L5 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4h-4zM35.568 7.047l2.557 7.219 2.543-7." fill="#fff"/>
+              <svg class="w-32" viewBox="0 0 24 24" fill="none"><path d="M18 4l2 4h-3l-2-4h-2l2 4h-3l-2-4H8l2 4H7L5 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4h-4zM35.568 7.047l2.557 7.219" fill="#fff"/>
               </svg>
           </div>
           <div class="relative mt-10 h-px bg-gray-800">
@@ -75,8 +75,23 @@
                     </span>
                   </div>
 
-                  <input id="password" type="password" name="password" class="text-sm text-black sm:text-base bg-gray-100 placeholder-gray-500 pl-10 pr-4 rounded-lg border border-gray-400 w-full py-2 focus:outline-none focus:border-blue-600" placeholder="Password" minlength="6" required />
+                  <input id="password" type="password" name="password" class="text-sm text-black sm:text-base bg-gray-100 placeholder-gray-500 pl-10 pr-4 rounded-lg border border-gray-400 w-full py-2 focus:outline-none focus:border-blue-600" placeholder="Password" minlength="6" onchange='check_pass();' required />
                 </div>
+              </div>
+              <div class="flex flex-col mb-6">
+                <label for="password" class="mb-1 text-xs sm:text-sm tracking-wide text-white">Confirm Password:</label>
+                <div class="relative">
+                  <div class="inline-flex items-center justify-center absolute left-0 top-0 h-full w-10 text-gray-400">
+                    <span>
+                      <svg class="h-6 w-6" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
+                        <path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                      </svg>
+                    </span>
+                  </div>
+
+                  <input id="confirmPass" type="password" name="confirmPass" class="text-sm text-black sm:text-base bg-gray-100 placeholder-gray-500 pl-10 pr-4 rounded-lg border border-gray-400 w-full py-2 focus:outline-none focus:border-blue-600" placeholder="Confirm Password" minlength="6" onchange='check_pass();' required />
+                </div>
+                <span id='alert'></span>
               </div>
               <div class="flex flex-col mb-6">
                 <label for="avatar" class="mb-1 text-xs sm:text-sm tracking-wide text-white">Avatar:</label>
@@ -85,7 +100,7 @@
                 </div>
               </div>
               <div class="flex w-full">
-                <button type="submit" class="flex items-center justify-center focus:outline-none text-white text-sm sm:text-base bg-orange-500 hover:bg-orange-700 rounded py-2 w-full transition duration-150 ease-in">
+                <button type="submit" id="submit" class="flex items-center justify-center focus:outline-none text-white text-sm sm:text-base bg-orange-500 hover:bg-orange-700 rounded py-2 w-full transition duration-150 ease-in">
                   <span class="mr-2 uppercase">Sign Up</span>
                   <span>
                     <svg class="h-6 w-6" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
@@ -98,4 +113,27 @@
       </div>
     </div>
   </form>
+@endsection
+
+
+@section('scripts')
+
+<script type="text/javascript">
+  
+  function check_pass() {
+    if (document.getElementById('password').value == document.getElementById('confirmPass').value) {
+        document.getElementById('alert').innerHTML='Matching!';
+        document.getElementById('alert').style.color = "#16a34a";
+        document.getElementById('submit').removeAttribute('disabled');
+    } else {
+        document.getElementById('alert').innerHTML='Not Matching!';
+        document.getElementById('alert').style.color = "#dc2626";
+        document.getElementById('submit').setAttribute('disabled',true);
+    }
+  }
+
+
+</script>
+
+
 @endsection

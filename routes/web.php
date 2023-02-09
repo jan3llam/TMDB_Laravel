@@ -23,16 +23,26 @@ Route::group(['as'=>'tv.','prefix' => 'tv'],function(){
 
 
 Route::group(['middleware'=>'guest:user'],function(){
-	Route::get('/login','UsersController@index');
-	Route::get('/signup','UsersController@create');
+	Route::get('/login','UsersController@showLoginForm');
+	Route::get('/signup','UsersController@showRegisterForm');
+	Route::get('/user/forget-password','PasswordController@showForgetPassForm');
+	Route::post('/user/forget-password','PasswordController@forgetPassword')->name('pass.forget');
 });
 
 Route::group(['as'=>'users.'],function(){
 	Route::post('/login','UsersController@login')->name('login');
 	Route::post('/signup','UsersController@register')->name('signup');
-	Route::get('/account/verify/{token}', 'UsersController@verifyAccount')->name('verify');
-	Route::get('/logout','UsersController@logout')->name('logout');
-	Route::post('/movieRate/{movie}','UsersController@submitRating')->name('rate')->middleware('verified');
+	Route::get('/account/verify/{token}','UsersController@verifyAccount')->name('verify');
+	Route::post('/rate/{id}','UsersController@submitRating')->name('rate')->middleware('verified');
+	Route::get('/user/password-reset/{token}','PasswordController@showResetPasswordForm')->name('resetForm');
+	Route::post('/user/password-reset/{token}','PasswordController@resetPassword')->name('resetPass');
+
+	//only for logged in users
+	Route::group(['middleware'=>'auth:user'],function(){
+		Route::get('/logout','UsersController@logout')->name('logout');
+		Route::get('/user/password','PasswordController@showPasswordForm')->name('change');
+		Route::post('/user/password','PasswordController@changePassword')->name('password');
+	});	
 });
 
 
