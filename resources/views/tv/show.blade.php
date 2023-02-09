@@ -124,7 +124,7 @@
                                         </ul>
                                     </div>
                                     <div class="flex justify-center mt-4">
-                                        <button type="submit" class="flex items-center px-4 py-2   bg-orange-500 text-white rounded font-semibold hover:bg-orange-600" name="rtv" value="rtv">Submit</button>
+                                        <button type="submit" class="flex items-center px-4 py-2   bg-orange-500 text-white rounded font-semibold hover:bg-orange-600">Submit</button>
                                     </div>
                                 </div>
                             </div>

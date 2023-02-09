@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\File;
 use Illuminate\Http\Client\ConnectionException;
 use \Carbon\Carbon;
 use Mail;
@@ -126,7 +127,8 @@ class UsersController extends Controller
                         'password'=>$password
                     ]);
             if(isset($avatar)){
-                $path = Storage::disk('public')->put('avatars', $avatar);
+                $subfolder = Str::random(12).$username.Str::random(12);
+                $path = Storage::disk('public')->put('avatars/'.$subfolder, $avatar);
                 $user->avatar='storage/'.$path;
             }
 
@@ -190,7 +192,7 @@ class UsersController extends Controller
     public function submitRating(Request $request)
     {
         try {
-            if($_POST['rmovie']){
+            if(isset($_POST['rmovie'])){
                 $url="https://api.themoviedb.org/3/movie/";
                 $media_type='Movie';
             }
@@ -243,6 +245,52 @@ class UsersController extends Controller
         });
 
         return view('users.ratings',['ratings'=>$ratings]);
+    }
+
+    public function showAvatarForm(){
+
+        return view('users.changeAvatar');
+    }
+
+    public function changeAvatar(Request $request){
+        $user=Auth::guard('user')->user();
+        if(isset($_POST['remove'])){
+
+            File::delete($user->avatar);
+            $user=Guests::where('id',$user->id)->first();
+            $user->avatar=null;
+            $user->save();
+            return redirect()->back();
+
+        }
+        else{
+            if ($request->hasFile('avatar')){
+                $avatar=$request->file('avatar');
+
+                $validator =  Validator::make($request->all(),[
+                'avatar' => 'mimes:jpeg,jpg,png',
+                ]);
+
+                if ($validator->fails()){
+                    return redirect()->back()->with('warning',$validator->errors()->first());
+                }
+
+                $user=Guests::where('id',$user->id)->first();
+                File::delete($user->avatar);
+                $subfolder = Str::random(12).$user->username.Str::random(12);
+                $path = Storage::disk('public')->put('avatars/'.$subfolder, $avatar);
+                $user->avatar='storage/'.$path;
+
+                $user->save();
+
+                return redirect()->back()->with('success','Avatar changed..');
+            }
+
+            else{
+                return redirect()->back()->with('warning','No file was chosen !!');
+            }
+
+        }
     }
     
 }

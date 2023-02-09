@@ -43,6 +43,8 @@ Route::group(['as'=>'users.'],function(){
 		Route::get('/user/password','PasswordController@showPasswordForm')->name('change');
 		Route::post('/user/password','PasswordController@changePassword')->name('password');
 		Route::get('/myratings','UsersController@showRatingsForm');
+		Route::get('/myavatar','UsersController@showAvatarForm');
+		Route::post('/myavatar','UsersController@changeAvatar')->name('changeAvatar');
 	});	
 });
 

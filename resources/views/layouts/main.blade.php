@@ -37,15 +37,11 @@
             @if(Auth::guard('user')->check())
               @if(isset(Auth::guard('user')->user()->avatar))
                 <div class="md:mr-4 mt-3 md:mt-0">
-                      <a href="#">
-                        <img src="{{Auth::guard('user')->user()->avatar}}" alt="avatar" class="rounded-full w-8 h-8">
-                      </a>
+                      <img src="{{Auth::guard('user')->user()->avatar}}" alt="avatar" class="rounded-full w-8 h-8">
                 </div>
               @else
                 <div class="md:mr-4 mt-3 md:mt-0">
-                      <a href="#">
-                        <img src="{{url('img/noprofile.png')}}" alt="avatar" class="rounded-full w-8 h-8">
-                      </a>
+                      <img src="{{url('img/noprofile.png')}}" alt="avatar" class="rounded-full w-8 h-8">
                 </div>
               @endif
             @endif
