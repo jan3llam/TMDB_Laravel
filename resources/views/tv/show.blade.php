@@ -89,7 +89,7 @@
                         </div>
                     </div>
                 </div>
-                <form method="POST" action="{{route('users.rate',$tvShow['id'])}}">
+                <form method="POST" action="{{route('users.rate',[$tvShow['id'],$tvShow['name']])}}">
                     @csrf
                     <div
                         style="background-color: rgba(0, 0, 0, .5);"

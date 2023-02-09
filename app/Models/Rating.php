@@ -14,9 +14,10 @@ class Rating extends Model
     protected $fillable =[ 
             'guest_id',
             'media_type',
+            'title',
             'show_id',
             'value'
-    ]
+    ];
 
     public function guest()
     {

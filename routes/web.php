@@ -33,7 +33,7 @@ Route::group(['as'=>'users.'],function(){
 	Route::post('/login','UsersController@login')->name('login');
 	Route::post('/signup','UsersController@register')->name('signup');
 	Route::get('/account/verify/{token}','UsersController@verifyAccount')->name('verify');
-	Route::post('/rate/{id}','UsersController@submitRating')->name('rate')->middleware('verified');
+	Route::post('/rate/{id}/{title}','UsersController@submitRating')->name('rate')->middleware('verified');
 	Route::get('/user/password-reset/{token}','PasswordController@showResetPasswordForm')->name('resetForm');
 	Route::post('/user/password-reset/{token}','PasswordController@resetPassword')->name('resetPass');
 
@@ -42,6 +42,7 @@ Route::group(['as'=>'users.'],function(){
 		Route::get('/logout','UsersController@logout')->name('logout');
 		Route::get('/user/password','PasswordController@showPasswordForm')->name('change');
 		Route::post('/user/password','PasswordController@changePassword')->name('password');
+		Route::get('/myratings','UsersController@showRatingsForm');
 	});	
 });
 

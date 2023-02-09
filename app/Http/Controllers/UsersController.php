@@ -146,7 +146,7 @@ class UsersController extends Controller
               });
 
 
-            return view('users.login')->with('success','Please sign in again..');
+            return redirect(route('users.login'))->with('success','Please sign in again..');
         }
         catch(ConnectionException $e){
 
@@ -175,20 +175,28 @@ class UsersController extends Controller
             }
         }
   
-      return redirect(route('users.login'))->with('success',$message);
+      return redirect(route('movies.index'))->with('success',$message);
     }
 
+
+    public function logout(Request $request)
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();     
+        return view('users.login');
+    }
 
     public function submitRating(Request $request)
     {
         try {
             if($_POST['rmovie']){
                 $url="https://api.themoviedb.org/3/movie/";
-                $media_type='movie';
+                $media_type='Movie';
             }
             else{
                 $url="https://api.themoviedb.org/3/tv/";
-                $media_type='tv';
+                $media_type='Tv Show';
             }
 
             $value=json_encode(['value'=>$request->input('rate')]);
@@ -200,18 +208,19 @@ class UsersController extends Controller
                     'body' => $value
                 ])->json(); 
 
-            if($response->success){
+            if($response['success']){
                 Rating::create([
                     'guest_id'=>$guest_id,
                     'media_type'=>$media_type,
+                    'title'=>$request->title,
                     'show_id'=>$request->id,
-                    'value'=>$value ]);
+                    'value'=>$request->input('rate') ]);
 
                 return redirect()->back()->with('success','Rating Submitted!');
 
             }
             else {
-                return redirect()->back()->with('failure',$response->status_message);
+                return redirect()->back()->with('failure',$response['status_message']);
             }
         }
         catch(ConnectionException $e){
@@ -221,13 +230,19 @@ class UsersController extends Controller
 
     }
 
-    public function logout(Request $request)
-    {
-        Auth::logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();     
-        return view('users.login');
-    }
 
+    public function showRatingsForm(){
+        $guest=Auth::guard('user')->user();
+        $ratings=Rating::where('guest_id',$guest->id)->get();
+
+        $ratings=collect($ratings)->map(function($rating){
+            return collect($rating)->merge([
+                'value'=>$rating['value'].'.0/10',
+                'linkToPage' => $rating['media_type'] === 'movie' ? route('movies.show', $rating['show_id']) : route('tv.show', $rating['show_id']),
+            ]);
+        });
+
+        return view('users.ratings',['ratings'=>$ratings]);
+    }
     
 }
