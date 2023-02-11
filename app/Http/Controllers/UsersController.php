@@ -108,7 +108,9 @@ class UsersController extends Controller
 
 
             $validator =  Validator::make($request->all(),[
-                'username' => 'unique:Guests,username',
+                'firstname' => 'string|regex:/^[a-zA-Z]+$/',
+                'lastname' => 'string|regex:/^[a-zA-Z]+$/',
+                'username' => 'unique:Guests,username|regex:/^[a-zA-Z]{1}/',
                 'email' => 'unique:Guests,email',
                 'avatar' => 'mimes:jpeg,jpg,png',
             ]);
@@ -148,7 +150,7 @@ class UsersController extends Controller
               });
 
 
-            return redirect(route('users.login'))->with('success','Please sign in again..');
+            return redirect(route('users.login'))->with('success','Check your mail for the verification link so you can start rating, please sign in again ..');
         }
         catch(ConnectionException $e){
 
@@ -186,7 +188,7 @@ class UsersController extends Controller
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();     
-        return view('users.login');
+        return redirect(route('movies.index'));
     }
 
     public function submitRating(Request $request)
@@ -204,6 +206,10 @@ class UsersController extends Controller
             $value=json_encode(['value'=>$request->input('rate')]);
             $session=Auth::guard('user')->user()->session;
             $guest_id=Auth::guard('user')->user()->id;
+
+            if(!is_null(Rating::where('title',$request->title)->first())){
+                return redirect()->back()->with('failure','You have already rated this movie/show..');
+            }
 
             $response = Http::withHeaders(['Content-Type' => 'application/json'])
                 ->send('POST', $url.$request->id.'/rating?api_key='.config('services.tmdb.api').'&guest_session_id='.$session, [
@@ -233,24 +239,26 @@ class UsersController extends Controller
     }
 
 
-    public function showRatingsForm(){
+    public function showRatingsForm($page){
         $guest=Auth::guard('user')->user();
         $ratings=Rating::where('guest_id',$guest->id)->get();
 
         $ratings=collect($ratings)->map(function($rating){
             return collect($rating)->merge([
                 'value'=>$rating['value'].'.0/10',
-                'linkToPage' => $rating['media_type'] === 'movie' ? route('movies.show', $rating['show_id']) : route('tv.show', $rating['show_id']),
+                'linkToPage' => $rating['media_type'] === 'Movie' ? route('movies.show', $rating['show_id']) : route('tv.show', $rating['show_id']),
             ]);
         });
+        $ratings=$ratings->forPage($page, 6);
 
-        return view('users.ratings',['ratings'=>$ratings]);
+        return view('users.ratings',['ratings'=>$ratings,'page'=>$page]);
     }
 
     public function showAvatarForm(){
 
         return view('users.changeAvatar');
     }
+
 
     public function changeAvatar(Request $request){
         $user=Auth::guard('user')->user();

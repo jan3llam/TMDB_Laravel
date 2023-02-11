@@ -19,7 +19,7 @@
             </tr>
         </thead>
         <tbody class="[&>*:nth-child(odd)]:bg-gray-700 [&>*:nth-child(even)]:bg-gray-800">
-            @if(isset($ratings))
+            @if(count($ratings)>0)
 	        	@foreach($ratings as $rating)
 		            <tr class="bg-white border-b">
 		                <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
@@ -36,5 +36,17 @@
 		    @endif
         </tbody>
     </table>
+    <div class="flex justify-between mt-8">
+            @if ($page>1)
+                <a class="ml-4 bg-gray-800 border-solid border-white rounded-lg px-3 py-2 hover:text-gray-900 hover:bg-white" href="/myratings/{{$page-1}}">Previous</a>
+            @else
+                <div></div>
+            @endif
+            @if ($page==1)
+                <a class="mr-4 bg-gray-800 border-solid border-white rounded-lg px-3 py-2 hover:text-gray-900 hover:bg-white" href="/myratings/{{$page+1}}">Next</a>
+            @else
+                <div></div>
+            @endif
+    </div>
 </div>
 @endsection
