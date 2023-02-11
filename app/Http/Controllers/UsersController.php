@@ -210,6 +210,9 @@ class UsersController extends Controller
             if(!is_null(Rating::where('title',$request->title)->first())){
                 return redirect()->back()->with('failure','You have already rated this movie/show..');
             }
+            else if(Rating::where('created_at','<',Carbon::now())->count()>10){
+                return redirect()->back()->with('warning','You have reached your daily limit (10 ratings) !');
+            }
 
             $response = Http::withHeaders(['Content-Type' => 'application/json'])
                 ->send('POST', $url.$request->id.'/rating?api_key='.config('services.tmdb.api').'&guest_session_id='.$session, [
@@ -240,6 +243,7 @@ class UsersController extends Controller
 
 
     public function showRatingsForm($page){
+        abort_if($page<1||$page>500,404);
         $guest=Auth::guard('user')->user();
         $ratings=Rating::where('guest_id',$guest->id)->get();
 
