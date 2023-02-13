@@ -45,13 +45,17 @@ class TvController extends Controller
         try{
             $details=Http::get('https://api.themoviedb.org/3/tv/'.$id.'?api_key='.config('services.tmdb.api').'&append_to_response=credits,videos,images')->json();
 
+            if($details['success']==false){
+                return redirect()->to('/tv')->with('failure','Source couldn\'t be found..');
+            }
+
             $viewModel=new ShowTvViewModel($details);
 
             return view('tv.show',$viewModel);
         }
         catch(ConnectionException $e){
 
-            return redirect()->back()->with('failure','Connection Problem..');
+            return redirect()->to('/tv')->with('failure','Connection Problem..');
         }
     }
 

@@ -18,9 +18,10 @@ class CreateRatingsTable extends Migration
             $table->unsignedInteger('guest_id');
             $table->foreign('guest_id')->references('id')->on('guests');
             $table->string('media_type',40);
-            $table->string('title',100)->unique();
+            $table->string('title',100);
             $table->integer('show_id');
             $table->integer('value');
+            $table->unique(['guest_id','title']);
             $table->timestamps();
         });
     }

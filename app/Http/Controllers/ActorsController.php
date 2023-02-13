@@ -47,14 +47,16 @@ class ActorsController extends Controller
 
             $social=Http::get("https://api.themoviedb.org/3/person/".$id."/external_ids?api_key=".config('services.tmdb.api'))->json();
 
-
+            if($actor['success']==false){
+                return redirect()->to('/actors')->with('failure','Source couldn\'t be found..');
+            }
             $viewModel=new ShowActorViewModel($actor,$credits,$social);
 
             return view('actors.show',$viewModel);    
         }
         catch(ConnectionException $e){
 
-            return redirect()->back()->with('failure','Connection Problem..');
+            return redirect()->to('/actors')->with('failure','Connection Problem..');
         }
     }
 
