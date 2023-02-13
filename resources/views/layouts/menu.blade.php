@@ -7,6 +7,12 @@
                 </a>
             </li>
             <li>
+                <a href="{{url('/animeQuotes/quote')}}" class="flex items-center p-2 rounded-lg hover:bg-gray-600">
+                    <i class="fa fa-quote-right ml-3 text-2xl text-gray-500" aria-hidden="true"></i>
+                    <span class="ml-3 text-sm text-white">Anime Quotes</span>
+                </a>
+            </li>
+            <li>
                 <a href="{{url('/myavatar')}}" class="flex items-center p-2 rounded-lg hover:bg-gray-600">
                     <i class="fa fa-user-circle ml-3 text-2xl text-gray-500" aria-hidden="true"></i>
                     <span class="ml-3 text-sm text-white">Change Avatar</span>

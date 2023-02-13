@@ -26,7 +26,8 @@ class Guests extends Model implements AuthenticatableContract, AuthorizableContr
         'session',
         'session_expiry',
         'verified',
-        'email_verified_at'
+        'email_verified_at',
+        'quote_limit'
     ];
 
     protected $hidden=[

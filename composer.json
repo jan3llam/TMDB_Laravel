@@ -13,6 +13,7 @@
         "laravel/tinker": "^2.5",
         "laravel/ui": "^3.4",
         "livewire/livewire": "^2.11",
+        "maize-tech/laravel-markable": "^1.0",
         "spatie/laravel-view-models": "^1.5"
     },
     "require-dev": {

@@ -39,27 +39,6 @@ class MoviesController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
      * Display the specified resource.
      *
      * @param  int  $id
@@ -67,45 +46,17 @@ class MoviesController extends Controller
      */
     public function show($id)
     {
+        try{
+            $details=Http::get('https://api.themoviedb.org/3/movie/'.$id.'?api_key='.config('services.tmdb.api').'&append_to_response=credits,videos,images')->json();
 
-        $details=Http::get('https://api.themoviedb.org/3/movie/'.$id.'?api_key='.config('services.tmdb.api').'&append_to_response=credits,videos,images')->json();
+            $viewModel = new ShowMovieViewModel($details);
 
-        $viewModel = new ShowMovieViewModel($details);
+            return view('movies.show',$viewModel);
+        }
+        catch(ConnectionException $e){
 
-        return view('movies.show',$viewModel);
+            return redirect()->back()->with('failure','Connection Problem..');
+        }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
 }

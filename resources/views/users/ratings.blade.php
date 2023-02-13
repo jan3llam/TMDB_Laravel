@@ -36,7 +36,7 @@
 		    @endif
         </tbody>
     </table>
-    <div class="flex justify-between mt-8">
+    <div class="flex justify-between mt-8 mb-2">
             @if ($page>1)
                 <a class="ml-4 bg-gray-800 border-solid border-white rounded-lg px-3 py-2 hover:text-gray-900 hover:bg-white" href="/myratings/{{$page-1}}">Previous</a>
             @else
