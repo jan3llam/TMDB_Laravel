@@ -49,9 +49,12 @@ class MoviesController extends Controller
         try{
             $details=Http::get('https://api.themoviedb.org/3/movie/'.$id.'?api_key='.config('services.tmdb.api').'&append_to_response=credits,videos,images')->json();
 
-            if($details['success']==false){
-                return redirect()->to('/movies')->with('failure','Source couldn\'t be found..');
+            if(isset($details['success'])){
+                if($details['success']==false){
+                    return redirect()->to('/movies')->with('failure','Source couldn\'t be found..');
+                }
             }
+            
 
             $viewModel = new ShowMovieViewModel($details);
 
