@@ -58,6 +58,16 @@
                 </span>
               </button>
             </div>
+            <div class="relative mt-10 h-px bg-gray-800">
+                <div class="absolute left-0 top-0 flex justify-center w-full -mt-2">
+                  <span class="bg-gray-800 px-4 text-sm text-white uppercase">Or Log in using Google account</span>
+                </div>
+            </div>
+            <div class="flex w-full mt-10 mb-5" data-onsuccess="onSignIn">
+                <a href="{{route('users.google.login')}}" id="gmail" class="flex items-center justify-center focus:outline-none text-white text-sm sm:text-base bg-gray-400 hover:bg-gray-600 rounded-lg py-2 w-full transition duration-150 ease-in">
+                    <img class="w-28 h-7" src="img/google.png">
+                </a>
+            </div>
         </div>
         <div class="flex justify-center items-center mt-6">
           <a href="{{url('/signup')}}" class="inline-flex items-center font-bold text-white hover:text-orange-500 text-xs text-center">

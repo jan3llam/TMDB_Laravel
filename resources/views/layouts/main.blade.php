@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="google-signin-client_id" content="746668172856-4rnkahkinr9sk2ue8n49ps7kjfctbghj.apps.googleusercontent.com">
     <title>Movie App</title>
     <link href="/css/main.css" rel="stylesheet">
     @livewireStyles

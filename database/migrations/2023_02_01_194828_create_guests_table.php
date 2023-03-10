@@ -26,6 +26,7 @@ class CreateGuestsTable extends Migration
             $table->boolean('verified')->default(0);
             $table->timestamp('email_verified_at')->nullable();
             $table->integer('quote_limit')->default(4);
+            $table->string('google_id',100)->unique()->nullable();
             $table->timestamps();
         });
     }

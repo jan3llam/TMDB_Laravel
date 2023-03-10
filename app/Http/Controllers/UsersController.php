@@ -12,9 +12,9 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\File;
+use App\Events\SuccessfullRegister;
 use Illuminate\Http\Client\ConnectionException;
 use \Carbon\Carbon;
-use Mail;
 use Auth;
 use Str;
 
@@ -122,7 +122,7 @@ class UsersController extends Controller
 
             
 
-            $user = Guests::create([
+            $guest = Guests::create([
                         'firstname'=>$firstname,
                         'lastname'=>$lastname,
                         'username'=>$username,
@@ -132,24 +132,14 @@ class UsersController extends Controller
             if(isset($avatar)){
                 $subfolder = Str::random(12).$username.Str::random(12);
                 $path = Storage::disk('public')->put('avatars/'.$subfolder, $avatar);
-                $user->avatar='storage/'.$path;
+                $guest->avatar='storage/'.$path;
             }
 
-            $user->save();
+            $guest->save();
 
-            $token = Str::random(64);
+            // event(new SuccessfullRegister($guest));
 
-            UserVerify::create([
-                  'emailtoken' => $token, 
-                  'guest_id' => $user->id
-                ]);
-
-            Mail::send('emails.verificationEmail', ['token' => $token], function($message) use($user){
-                  $message->to($user->email);
-                  $message->from('MandS.supp@gmail.com', 'Movies&Shows');
-                  $message->subject('Email Verification Mail');
-              });
-
+            SuccessfullRegister::dispatch($guest);
 
             return redirect(route('users.login'))->with('success','Check your mail for the verification link so you can start rating, please sign in again ..');
         }

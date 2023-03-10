@@ -100,7 +100,7 @@
                 </div>
               </div>
               <div class="flex w-full">
-                <button type="submit" id="submit" class="flex items-center justify-center focus:outline-none text-white text-sm sm:text-base bg-orange-500 hover:bg-orange-700 rounded py-2 w-full transition duration-150 ease-in">
+                <button type="submit" id="submit" class="flex items-center justify-center focus:outline-none text-white text-sm sm:text-base bg-orange-500 hover:bg-orange-700 rounded-lg py-2 w-full transition duration-150 ease-in">
                   <span class="mr-2 uppercase">Sign Up</span>
                   <span>
                     <svg class="h-6 w-6" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
@@ -108,6 +108,16 @@
                     </svg>
                   </span>
                 </button>
+              </div>
+              <div class="relative mt-10 h-px bg-gray-800">
+                <div class="absolute left-0 top-0 flex justify-center w-full -mt-2">
+                  <span class="bg-gray-800 px-4 text-sm text-white uppercase">Or Sign up using Google account</span>
+                </div>
+              </div>
+              <div class="flex w-full mt-10 mb-5" data-onsuccess="onSignIn">
+                <a href="{{route('users.google.login')}}" id="gmail" class="flex items-center justify-center focus:outline-none text-white text-sm sm:text-base bg-gray-400 hover:bg-gray-600 rounded-lg py-2 w-full transition duration-150 ease-in">
+                    <img class="w-28 h-7" src="img/google.png">
+                </a>
               </div>
           </div>
       </div>
@@ -118,6 +128,7 @@
 
 @section('scripts')
 
+<script src="https://apis.google.com/js/platform.js" async defer></script>
 <script type="text/javascript">
   
   function check_pass() {

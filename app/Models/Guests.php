@@ -27,11 +27,13 @@ class Guests extends Model implements AuthenticatableContract, AuthorizableContr
         'session_expiry',
         'verified',
         'email_verified_at',
-        'quote_limit'
+        'quote_limit',
+        'google_id'
     ];
 
     protected $hidden=[
         'password',
+        'google_id',
         'remember_token'
     ];
 

@@ -37,6 +37,14 @@ Route::group(['as'=>'users.'],function(){
 	Route::get('/user/password-reset/{token}','PasswordController@showResetPasswordForm')->name('resetForm');
 	Route::post('/user/password-reset/{token}','PasswordController@resetPassword')->name('resetPass');
 
+	//google auth
+	Route::group(['as'=>'google.'],function(){
+		Route::get('/login/google','SocialAuthController@redirectToProvider')->name('login');
+		Route::get('/auth/google/callback','SocialAuthController@handleCallback')->name('login.callback');
+		Route::get('/setup/password','PasswordController@showSetupPassForm')->name('setup')->middleware('auth:user');
+		Route::post('/setup/password','PasswordController@firstTimePassword')->name('password')->middleware('auth:user');
+	});
+
 	//only for logged in users
 	Route::group(['middleware'=>'auth:user'],function(){
 		Route::get('/logout','UsersController@logout')->name('logout');

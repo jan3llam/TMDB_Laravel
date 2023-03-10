@@ -18,7 +18,7 @@ class Authenticate extends Middleware
      * @param  string|null  ...$guards
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
-    public function handle(Request $request, Closure $next, ...$guards)
+    public function handle($request, Closure $next, ...$guards)
     {
         $guards = empty($guards) ? [null] : $guards;
 
@@ -39,7 +39,7 @@ class Authenticate extends Middleware
     protected function redirectTo($request)
     {
         if (! $request->expectsJson()) {
-            return route('login');
+            return route('users.login');
         }
     }
 }

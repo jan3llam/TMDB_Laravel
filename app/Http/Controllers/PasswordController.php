@@ -13,6 +13,9 @@ use Str;
 
 class PasswordController extends Controller
 {
+
+    // normal password change 
+
     public function showPasswordForm()
     {    
         return view('users.password.changePassword');
@@ -35,6 +38,28 @@ class PasswordController extends Controller
 
         return view('users.password.changePassword')->with('failure','Old password is wrong !!');
 
+        
+    }
+
+    //redirect after google auth
+
+    public function showSetupPassForm()
+    {    
+        return view('users.password.googleSetupPassword');
+    }
+
+    public function firstTimePassword(Request $request)
+    {    
+
+        $guest=Auth::guard('user')->user();
+        $newPass=$request->input('newPass');
+
+        $guest=Guests::where('id',$guest->id)->first();
+        $guest->password=Hash::make($newPass);
+        $guest->save();
+
+
+        return redirect(route('movies.index'))->with('success','New Password Submitted !');
         
     }
 
